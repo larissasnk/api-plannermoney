@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\AuthenticationException;
+
 
 class Handler extends ExceptionHandler
 {
@@ -35,6 +38,28 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+    
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'error' => 'Erro de validação',
+                'message' => $exception->getMessage(),
+                'errors' => $exception->errors() // retorna os erros de validação específicos
+            ], 422);
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'error' => 'Algo deu errado!',
+                'message' => $exception->getMessage(),
+                'code' => $exception->getCode()
+            ], 500);
+        }
+
+        return parent::render($request, $exception);
+    }
+
 
     /**
      * Register the exception handling callbacks for the application.
@@ -44,5 +69,13 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+    
+    public function unauthenticated($request, AuthenticationException $exception)
+    {
+        return response()->json([
+            'error' => 'Unauthorized',
+            'message' => $exception->getMessage()
+        ], 401);
     }
 }

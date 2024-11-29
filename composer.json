@@ -17,7 +17,8 @@
         "php": "^8.0",
         "laravel/framework": "^10.0",
         "darkaonline/l5-swagger": "*",
-        "laravel/sanctum": "^3.3"
+        "laravel/sanctum": "^3.3",
+        "tymon/jwt-auth": "^2.1"
     },
     "scripts": {
         "post-autoload-dump": [

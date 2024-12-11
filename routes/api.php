@@ -15,6 +15,9 @@ use App\Http\Controllers\GastoResidencialController;
 use App\Http\Controllers\ReceitaController;
 use App\Http\Controllers\TransacaoController;
 use App\Http\Controllers\GastoFamiliarController;
+use App\Http\Controllers\DividaController;
+use App\Http\Controllers\InvestimentoController;
+use App\Http\Controllers\RelatorioController;
 
 // Rotas de autenticação públicas (não protegidas)
 Route::post('logout', [AuthController::class, 'logout']);
@@ -37,9 +40,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('gasto-residencial', GastoResidencialController::class);
     Route::apiResource('receita', ReceitaController::class);
     Route::apiResource('transacao', TransacaoController::class);
+    Route::apiResource('divida', DividaController::class);
+    Route::apiResource('investimentos', InvestimentoController::class);
+    Route::get('/relatorio-consolidado', [RelatorioController::class, 'consolidado']);
+    Route::put('user', [AuthController::class, 'updateProfile']);
 
     // Rota protegida para obter o usuário autenticado
-    Route::get('/user', function (Request $request) {
+    Route::get('user', function (Request $request) {
         return $request->user();
     });
 });

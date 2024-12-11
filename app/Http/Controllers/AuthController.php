@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Evolucao52Semanas;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +29,8 @@ class AuthController extends Controller
         // Gera um token automaticamente após o registro
         $token = JWTAuth::fromUser($user);
 
+        $user->generate52Weeks();
+
         return response()->json([
             'message' => 'User registered successfully',
             'user' => $user,
@@ -34,22 +38,53 @@ class AuthController extends Controller
         ], 201);
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user(); // Obtém o usuário autenticado
+
+        // Valida os dados enviados
+        $request->validate([
+            'name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed', // password_confirmation deve ser enviado apenas se 'password' for preenchido
+        ]);
+
+        // Atualiza os dados do usuário
+        $user->name = $request->name ?? $user->name;
+        $user->email = $request->email ?? $user->email;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user,
+        ]);
+    }
+
+
     // Login para gerar o access token
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-        
+
         // Tenta gerar o Access Token com as credenciais do usuário
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // Gera o Refresh Token (o JWT retorna o mesmo token)
+        $user = auth()->user();
+
+        // Retorna o token e os dados do usuário
         return response()->json([
             'access_token' => $token,
+            'user' => $user,
         ]);
     }
-    
+
     public function logout()
     {
         JWTAuth::logout();
@@ -58,16 +93,28 @@ class AuthController extends Controller
     }
 
     // Refresh para gerar um novo access token usando o refresh token
-    public function refresh()
+    public function refresh(Request $request)
     {
         try {
-            $token = JWTAuth::parseToken()->refresh();
-            return response()->json(['access_token' => $token]);
-        } catch (\Exception $e) {
+            // Renova o token
+            $newToken = JWTAuth::parseToken()->refresh();
+
+            // Configura o novo token para o contexto de autenticação
+            JWTAuth::setToken($newToken);
+            // $user = JWTAuth::toUser($newToken);
+
+            return response()->json([
+                'access_token' => $newToken,
+                // 'user' => $user,
+            ]);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
             return response()->json(['error' => 'Refresh token is invalid'], 401);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while refreshing the token'], 500);
         }
     }
-    
+
+
     /**
      * Retorna os dados do usuário logado.
      */

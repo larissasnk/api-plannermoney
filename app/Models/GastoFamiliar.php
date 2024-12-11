@@ -15,6 +15,7 @@ class GastoFamiliar extends Model
         'nome_membro',
         'gasto_previsto',
         'gasto_realizado',
+        'user_id'
     ];
 
     public function transacao()

@@ -13,5 +13,6 @@ class AquisiacaoBem extends Model
         'nome',
         'valor',
         'data_aquisicao',
+        'user_id'
     ];
 }

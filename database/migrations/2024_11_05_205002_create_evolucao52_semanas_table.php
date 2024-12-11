@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('semana');
             $table->decimal('valor_deposito', 10, 2);
             $table->decimal('valor_acumulado', 10, 2);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

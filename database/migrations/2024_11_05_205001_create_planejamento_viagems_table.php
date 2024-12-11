@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('valor_hospedagem', 10, 2);
             $table->decimal('valor_total_viagem', 10, 2);
             $table->timestamps();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
     }
 

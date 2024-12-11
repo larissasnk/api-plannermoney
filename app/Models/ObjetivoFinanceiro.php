@@ -13,5 +13,6 @@ class ObjetivoFinanceiro extends Model
         'data',
         'valor',
         'plano',
+        'user_id',
     ];
 }

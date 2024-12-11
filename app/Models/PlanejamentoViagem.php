@@ -14,6 +14,7 @@ class PlanejamentoViagem extends Model
         'termino_viagem',
         'valor_hospedagem',
         'valor_total_viagem',
+        'user_id'
     ];
 
     public function custosDiarios()

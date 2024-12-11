@@ -12,7 +12,7 @@ class GastoCartaoController extends Controller
 {
     public function index()
     {
-        $gastosCartao = GastoCartao::all();
+        $gastosCartao = GastoCartao::where('user_id', auth()->user()->id)->get();
         $gastosCartao->load('transacao');
 
         return response()->json($gastosCartao, 200);
@@ -35,6 +35,7 @@ class GastoCartaoController extends Controller
         $dados = $request->all();
         $dados['tipo'] = 'saida';
         $dados['categoria'] = 'gasto-cartao';
+        $dados['user_id'] = auth()->user()->id;
 
         $transacao = Transacao::create($dados);
 

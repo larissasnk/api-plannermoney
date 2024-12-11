@@ -14,5 +14,6 @@ class Transacao extends Model
         'data',
         'tipo',
         'categoria',
+        'user_id',
     ];
 }

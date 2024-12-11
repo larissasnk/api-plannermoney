@@ -11,7 +11,7 @@ class TransacaoController extends Controller
 {
     public function index()
     {
-        $transacoes = Transacao::all();
+        $transacoes = Transacao::where('user_id', auth()->user()->id)->get();
         return response()->json($transacoes, 200);
     }
 
@@ -32,8 +32,11 @@ class TransacaoController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+        $dados = $request->all();
+        $dados['user_id'] = auth()->user()->id;
 
-        $transacao = Transacao::create($request->all());
+
+        $transacao = Transacao::create($dados);
         return response()->json($transacao, 201);
     }
    
@@ -58,10 +61,10 @@ class TransacaoController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'descricao' => 'sometimes|required|string|max:255',
-            'valor' => 'sometimes|required|numeric',
+            'descricao' => 'nullable|string|max:255',
+            'valor' => 'nullable|numeric',           
             'data' => 'sometimes|required|date',
-            'tipo' => 'sometimes|required|string|in:entrada,"saida"',
+            'tipo' => 'sometimes|required|string|in:entrada,saida',
             'categoria' => 'nullable|string|max:255',
         ]);
 

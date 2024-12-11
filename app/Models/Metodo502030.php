@@ -13,5 +13,6 @@ class Metodo502030 extends Model
         'nome',
         'valor_previsto',
         'valor_real',
+        'user_id'
     ];
 }

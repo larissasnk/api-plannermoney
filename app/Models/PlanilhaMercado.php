@@ -13,5 +13,6 @@ class PlanilhaMercado extends Model
         'valor',
         'tipo_unidade',
         'quantidade',
+        'user_id',
     ];
 }

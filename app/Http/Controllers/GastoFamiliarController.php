@@ -12,7 +12,7 @@ class GastoFamiliarController extends Controller
  
     public function index()
     {
-        $gastosFamiliares = GastoFamiliar::with('transacao')->get();
+        $gastosFamiliares = GastoFamiliar::where('user_id', auth()->user()->id)->with('transacao')->get();
         return response()->json($gastosFamiliares, 200);
     }
 
@@ -35,8 +35,8 @@ class GastoFamiliarController extends Controller
 
         $dados['tipo'] = 'saida'; // Define que é um gasto
         $dados['categoria'] = 'gasto-familiar';
-        $dados['valor'] = null;
-
+       
+        $dados['user_id'] = auth()->user()->id;
         $transacao = Transacao::create($dados);
         $dados['transacao_id'] = $transacao->id;
 
@@ -59,28 +59,32 @@ class GastoFamiliarController extends Controller
         if (!$gastoFamiliar) {
             return response()->json(['error' => 'Gasto Familiar não encontrado'], 404);
         }
-
+    
+        // Validação dos dados recebidos
         $validator = Validator::make($request->all(), [
             'tipo_membro' => 'sometimes|required|string|in:Conjugue,Filho',
             'nome_membro' => 'sometimes|string',
             'descricao' => 'sometimes|required|string|max:255',
-            'data' => 'sometimes|required|date',
+            'data' => 'sometimes|required|date', // Certifique-se de validar a data
             'gasto_previsto' => 'sometimes|required|numeric',
             'gasto_realizado' => 'sometimes|numeric',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        // Atualizar transação associada, se necessário
+    
+        // Atualizar transação associada, se os dados existirem
         if ($gastoFamiliar->transacao) {
-            $gastoFamiliar->transacao->update($request->only(['descricao']));
+            $gastoFamiliar->transacao->update($request->only(['descricao', 'data']));
         }
-
-        $gastoFamiliar->update($request->all());
+    
+        // Atualizar o modelo Gasto Familiar
+        $gastoFamiliar->update($request->only(['tipo_membro', 'nome_membro', 'gasto_previsto', 'gasto_realizado']));
+    
         return response()->json($gastoFamiliar->load('transacao'), 200);
     }
+    
 
     public function destroy($id)
     {

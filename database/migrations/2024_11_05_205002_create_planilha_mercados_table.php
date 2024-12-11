@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('valor', 10, 2);
             $table->string('tipo_unidade');
             $table->integer('quantidade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ class AquisicaoBemController extends Controller
 
     public function index()
     {
-        $bens = AquisiacaoBem::all();
+        $bens = AquisiacaoBem::where('user_id', auth()->user()->id)->get();
         return response()->json($bens, 200);
     }
 
@@ -28,7 +28,10 @@ class AquisicaoBemController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $bem = AquisiacaoBem::create($request->all());
+        $dados = $request->all();
+        $dados['user_id'] = auth()->user()->id;
+
+        $bem = AquisiacaoBem::create($dados);
         return response()->json($bem, 201);
     }
 

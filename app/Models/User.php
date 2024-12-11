@@ -58,4 +58,28 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function generate52Weeks()
+    {
+        $dep = 10;
+        $acumulado = 10;
+
+        for ($i = 1; $i <= 52; $i++) {
+            if (Evolucao52Semanas::where('semana', $i)->where('user_id', $this->id)->exists()) {
+                continue;
+            }
+            Evolucao52Semanas::create([
+                'semana' => $i,
+                'status' => 0,
+                'user_id' => $this->id,
+                'valor_deposito' => $dep,
+                'valor_acumulado' => $acumulado
+            ]);
+
+            $dep += 10;
+            $acumulado += $dep;
+        }
+    }
+
+
 }

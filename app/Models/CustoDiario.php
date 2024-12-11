@@ -15,6 +15,7 @@ class CustoDiario extends Model
         'transporte_valor',
         'extra_valor',
         'data_diaria',
+        'user_id'
     ];
 
     public function planejamentoViagem()

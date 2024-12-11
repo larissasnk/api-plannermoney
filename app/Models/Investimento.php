@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GastoResidencial extends Model
+class Investimento extends Model
 {
-    protected $table = 'gastos_residenciais';
-
     protected $fillable = [
         'transacao_id',
-        'status',
+        'taxa_retorno',
         'user_id'
     ];
 
@@ -19,3 +17,4 @@ class GastoResidencial extends Model
         return $this->belongsTo(Transacao::class);
     }
 }
+

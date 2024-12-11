@@ -11,7 +11,7 @@ class ObjetivoFinanceiroController extends Controller
 {
     public function index()
     {
-        $objetivos = ObjetivoFinanceiro::all();
+        $objetivos = ObjetivoFinanceiro::where('user_id', auth()->user()->id)->get();
         return response()->json($objetivos, 200);
     }
 
@@ -27,8 +27,10 @@ class ObjetivoFinanceiroController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+        $dados = $request->all();
+        $dados['user_id'] = auth()->user()->id;
 
-        $objetivo = ObjetivoFinanceiro::create($request->all());
+        $objetivo = ObjetivoFinanceiro::create($dados);
         return response()->json($objetivo, 201);
     }
     public function show($id)

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nome');
             $table->decimal('valor_previsto', 10, 2);
             $table->decimal('valor_real', 10, 2);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

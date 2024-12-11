@@ -11,7 +11,7 @@ class CustoDiarioController extends Controller
 {
     public function index()
     {
-        $custosDiarios = CustoDiario::all();
+        $custosDiarios = CustoDiario::where('user_id', auth()->user()->id)->get();
         return response()->json($custosDiarios, 200);
     }
 
@@ -30,7 +30,10 @@ class CustoDiarioController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $custoDiario = CustoDiario::create($request->all());
+        $dados = $request->all();
+        $dados['user_id'] = auth()->user()->id;
+
+        $custoDiario = CustoDiario::create($dados);
         return response()->json($custoDiario, 201);
     }
 

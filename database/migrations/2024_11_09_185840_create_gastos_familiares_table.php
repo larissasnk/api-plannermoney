@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nome_membro');
             $table->decimal('gasto_previsto', 10, 2);
             $table->decimal('gasto_realizado', 10, 2)->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
     
         });

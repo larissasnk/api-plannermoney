@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('data_aquisicao');
             $table->string('status');
             $table->string('nome');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->decimal('valor', 10, 2);
             $table->timestamps();
         });

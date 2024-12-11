@@ -11,7 +11,7 @@ class Metodo502030Controller extends Controller
 {
     public function index()
     {
-        $metodos = Metodo502030::all();
+        $metodos = Metodo502030::where('user_id', auth()->user()->id)->get();
         return response()->json($metodos, 200);
     }
 
@@ -28,7 +28,10 @@ class Metodo502030Controller extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $metodo = Metodo502030::create($request->all());
+        $dados = $request->all();
+        $dados['user_id'] = auth()->user()->id;
+
+        $metodo = Metodo502030::create($dados);
         return response()->json($metodo, 201);
     }
 

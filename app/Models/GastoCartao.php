@@ -12,6 +12,7 @@ class GastoCartao extends Model
         'transacao_id',
         'parcelado',
         'quantidade_parcela',
+        'user_id'
     ];
 
     public function transacao()

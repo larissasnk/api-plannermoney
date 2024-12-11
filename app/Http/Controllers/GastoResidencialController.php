@@ -11,7 +11,7 @@ class GastoResidencialController extends Controller
 {
     public function index()
     {
-        $gastosResidenciais = GastoResidencial::all();
+        $gastosResidenciais = GastoResidencial::where('user_id', auth()->user()->id)->get();
         $gastosResidenciais->load('transacao');
 
         return response()->json($gastosResidenciais, 200);
@@ -34,6 +34,8 @@ class GastoResidencialController extends Controller
 
         $dados['tipo'] = 'saida';
         $dados['categoria'] = 'gasto-residencial';
+        
+        $dados['user_id'] = auth()->user()->id;
 
         $transacao = Transacao::create($dados);
 

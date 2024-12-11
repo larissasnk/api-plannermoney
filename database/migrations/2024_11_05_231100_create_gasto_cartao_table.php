@@ -13,6 +13,7 @@ class CreateGastoCartaoTable extends Migration
             $table->foreignId('transacao_id')->constrained('transacoes')->onDelete('cascade');
             $table->boolean('parcelado'); // 0 para à vista, 1 para parcelado
             $table->integer('quantidade_parcela')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

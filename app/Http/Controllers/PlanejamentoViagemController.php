@@ -11,7 +11,7 @@ class PlanejamentoViagemController extends Controller
 {
     public function index()
     {
-        $planejamentos = PlanejamentoViagem::all();
+        $planejamentos = PlanejamentoViagem::where('user_id', auth()->user()->id)->get();
         return response()->json($planejamentos, 200);
     }
 
@@ -28,8 +28,10 @@ class PlanejamentoViagemController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
+        $dados = $request->all();
+        $dados['user_id'] = auth()->user()->id;
         // Criação do planejamento da viagem
-        $viagem = PlanejamentoViagem::create($request->all());
+        $viagem = PlanejamentoViagem::create($dados);
 
         // Atualizar o valor total da viagem (inicialmente é só o valor da hospedagem)
         $viagem->valor_total_viagem = $viagem->valor_hospedagem;
@@ -93,18 +95,21 @@ class PlanejamentoViagemController extends Controller
     {
         // Encontrar o planejamento de viagem
         $planejamentoViagem = PlanejamentoViagem::find($id);
-
+    
         if (!$planejamentoViagem) {
             return response()->json(['error' => 'Planejamento de viagem não encontrado'], 404);
         }
-
-        // Apagar as diárias associadas ao planejamento de viagem
-        $planejamentoViagem->custosDiarios()->delete();
-
+    
+        // Verificar se há diárias associadas
+        if ($planejamentoViagem->custosDiarios()->count() > 0) {
+            return response()->json(['error' => 'Não é possível excluir o planejamento de viagem porque existem diárias associadas.'], 422);
+        }
+    
         // Apagar o planejamento de viagem
         $planejamentoViagem->delete();
-
+    
         // Retornar a mensagem de sucesso
-        return response()->json(['message' => 'Planejamento de viagem e diárias deletados com sucesso'], 200);
+        return response()->json(['message' => 'Planejamento de viagem deletado com sucesso'], 200);
     }
+    
 }

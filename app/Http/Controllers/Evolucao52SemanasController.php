@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evolucao52Semanas;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use OpenApi\Annotations as OA;
 
 class Evolucao52SemanasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $evolucoes = Evolucao52Semanas::all();
+        $user = $request->user();
+        $user->generate52Weeks();
+
+        $evolucoes = Evolucao52Semanas::where('user_id', $user->id)->get();
         return response()->json($evolucoes, 200);
     }
 
@@ -28,7 +32,10 @@ class Evolucao52SemanasController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $evolucao = Evolucao52Semanas::create($request->all());
+        $dados = $request->all();
+        $dados['user_id'] = auth()->user()->id;
+
+        $evolucao = Evolucao52Semanas::create($dados);
         return response()->json($evolucao, 201);
     }
 

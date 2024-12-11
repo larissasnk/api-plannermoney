@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('passeio_valor', 10, 2);
             $table->decimal('transporte_valor', 10, 2);
             $table->decimal('extra_valor', 10, 2);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

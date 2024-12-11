@@ -11,6 +11,7 @@ class Receita extends Model
     protected $fillable = [
         'transacao_id',
         'renda_extra_nome',
+        'user_id',
         'renda_extra_valor',
         'renda_eventual_nome',
         'renda_eventual_valor',

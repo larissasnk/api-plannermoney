@@ -6,29 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('receitas', function (Blueprint $table) {
+        Schema::create('investimentos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transacao_id')->constrained('transacoes')->onDelete('cascade');
-            $table->string('renda_extra_nome')->nullable();
-            $table->decimal('renda_extra_valor', 10, 2)->nullable();
-            $table->string('renda_eventual_nome')->nullable();
+            $table->decimal('taxa_retorno', 5, 2);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->decimal('renda_eventual_valor', 10, 2)->nullable();
-            
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('receitas');
+        Schema::dropIfExists('investimentos');
     }
 };

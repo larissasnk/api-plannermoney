@@ -4,27 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateDividasTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('gastos_residenciais', function (Blueprint $table) {
+        Schema::create('dividas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transacao_id')->constrained('transacoes')->onDelete('cascade');
-            $table->string('status');
+            $table->boolean('quitado')->default(false); 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('gasto_residenciais');
+        Schema::dropIfExists('dividas');
     }
-};
+}

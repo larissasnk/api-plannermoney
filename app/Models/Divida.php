@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GastoResidencial extends Model
+class Divida extends Model
 {
-    protected $table = 'gastos_residenciais';
+    use HasFactory;
 
     protected $fillable = [
         'transacao_id',
-        'status',
+        'quitado',
         'user_id'
     ];
 
+    // Relacionamento com a tabela de transações
     public function transacao()
     {
         return $this->belongsTo(Transacao::class);

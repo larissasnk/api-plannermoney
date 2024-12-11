@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('data');
             $table->decimal('valor', 10, 2);
             $table->text('plano');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

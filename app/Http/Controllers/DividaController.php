@@ -34,13 +34,11 @@ class DividaController extends Controller
 
         $dados['tipo'] = 'saida'; // Define o tipo como saída
         $dados['categoria'] = 'divida-pendente'; // Categoria da transação
+        $dados['user_id'] = auth()->user()->id;
 
         // Cria a transação associada
         $transacao = Transacao::create($dados);
         $dados['transacao_id'] = $transacao->id;
-
-        $dados = $request->all();
-        $dados['user_id'] = auth()->user()->id;
 
         // Cria a dívida
         $divida = Divida::create($dados);
